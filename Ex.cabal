@@ -68,25 +68,31 @@ library
   hs-source-dirs:  
     src
   build-depends:   
-  
+    , aeson                 >=2.0
     , base
     , bytestring
     , containers
     , data-default
-
+    , directory
+    , filepath
+    , hedgehog
+    , hspec
+    , hspec-core
+    , hspec-golden
     , mtl
 
     , plutus-core           
     , plutus-ledger-api  >= 0.1.0.0
     , plutus-tx
-
+    , quickcheck-instances
     , sop-core
-   
+    , tasty-hunit
+    , tasty-quickcheck
     , text
-    
-   
+    , cborg
+    , base16-bytestring
     , serialise
-    
+    , transformers
     , cryptonite
     , flat
     , prettyprinter

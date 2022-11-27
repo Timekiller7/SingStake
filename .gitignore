@@ -48,4 +48,5 @@ Thumbs.db
 cabal.project.local*
 
 # Notes
+dev
 *.txt
