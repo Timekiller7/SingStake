@@ -946,19 +946,21 @@ withdrawRewardsGuard period amount paramsF txInfoF entryF =
       pguardC
         "withdrawRewardsGuard: totalDeposited is zero"
         $ natZero #< entryF.totalDeposited
-      let flhs =
+
+      let flhs =            -- totalRewards / totalDeposited
             mkNatRatioUnsafe
               (pto (entryF.totalRewards :: Term s PNatural))
               (pto (entryF.totalDeposited :: Term s PNatural))
-          frhs = entryF.rewards #+ (toNatRatio entryF.deposited)
-          f = roundDown $ frhs #* flhs
-          rhsDenominator = paramsF.interest #+ (toNatRatio natOne)
+          frhs = entryF.rewards #+ (toNatRatio entryF.deposited) -- rewards + deposited
+          f = roundDown $ frhs #* flhs  -- (rewards + deposited)*totalRewards / totalDeposited
+          rhsDenominator = paramsF.interest #+ (toNatRatio natOne) -- (interest + 1)
           rhsDenominator' =
             roundUp $
               natPow
-                # rhsDenominator
+                # rhsDenominator  -- (interest + 1)^(coeffK in docs)
                 # (getUnbondedBondingPeriodIncrement txInfoF.validRange paramsF)
-          rhs = mkNatRatioUnsafe (pto f) (pto rhsDenominator')
+          rhs = mkNatRatioUnsafe (pto f) (pto rhsDenominator') 
+            -- ( (rewards + deposited)*totalRewards / totalDeposited ) / (interest + 1)^(coeffK in docs)
           bondingRewards = roundDown $ entryF.rewards #+ rhs
 
       -- Validate amount is within bounds
